@@ -1,2 +1,2 @@
-# WattWattPortal
-mvp of our crowdfunding portal
+# WattWattDonation
+One page funding portal
