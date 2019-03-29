@@ -26,7 +26,7 @@
                 web3 = new Web3(new Web3.providers.HttpProvider(web3.currentProvider));
             }
             web3.eth.defaultAccount = web3.eth.accounts[0];
-            var bankContract = web3.eth.contract(                {
+            var bankContract = web3.eth.contract([{
                 "constant": false,
                 "inputs": [
                     {
