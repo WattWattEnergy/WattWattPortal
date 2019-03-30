@@ -19,30 +19,13 @@
     
         </div>
         <script>
-        window.addEventListener('load', async () => {
-            // Modern dapp browsers...
-            if (window.ethereum) {
-                window.web3 = new Web3(ethereum);
-                try {
-                    // Request account access if needed
-                    await ethereum.enable();
-                    // Acccounts now exposed
-                    web3.eth.sendTransaction({/* ... */ });
-                } catch (error) {
-                    // User denied account access...
-                }
+            if(typeof web3 !== 'undefined'){
+                web3 = new Web3(web3.currentProvider);
             }
-            // Legacy dapp browsers...
-            else if (window.web3) {
-                window.web3 = new Web3(web3.currentProvider);
-                // Acccounts always exposed
-                web3.eth.sendTransaction({/* ... */ });
+            else{
+                web3 = new Web3(new Web3.providers.HttpProvider(web3.currentProvider));
             }
-            // Non-dapp browsers...
-            else {
-                console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-            }
-        });
+            web3.eth.defaultAccount = web3.eth.accounts[0];
             var bankContract = web3.eth.contract([{
                 "constant": false,
                 "inputs": [
@@ -166,7 +149,7 @@
             }
         ]);
             var bank = bankContract.at("0xc44c04DF5Bd67c8353944d56aF09484180953002");
-            var depositEvent = bank.DepositEvent();
+            var depositEvent = bank.ReturnValue();
             bank.getBalance(function(error, result){
                 if(!error){
                     $("#balance").html(result.toString());
