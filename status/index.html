@@ -1,32 +1,45 @@
-
 <html>
-    <head>
-        <script src="”web3.min.js”"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    </head>
-    <body>
+
+<head>
+    <script src="”web3.min.js”"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script type="text/javascript" src='../node_modules/bignumber.js/bignumber.js'></script>
+</head>
+
+<body>
+    <div>
+
+        <h1>My bank</h1>
+
         <div>
-    
-            <h1 >My bank</h1>
-    
-            <div>
-                <span>Owner: </span><span id="owner"></span>
-            </div>
-            <div>
-                <span>Balance: </span><span id="balance"></span>
-            </div>
-        
-    
+            <span>Owner: </span>
+            <span id="owner"></span>
         </div>
-        <script>
-            if(typeof web3 !== 'undefined'){
-                web3 = new Web3(web3.currentProvider);
-            }
-            else{
-                web3 = new Web3(new Web3.providers.HttpProvider(web3.currentProvider));
-            }
-            web3.eth.defaultAccount = web3.eth.accounts[0];
-            var bankContract = web3.eth.contract([
+        <div>
+            <span>Balance: </span>
+            <span id="balance"></span>
+        </div>
+
+        <div class="card-footer">
+            <!-- <button small>Bookmark</button> -->
+
+            Funding Amount (in Ether):
+            <input type="number" size="50" id="amount" value="0.1" min="1">
+            <br>
+            <button onClick="sendDonation()" id="transfer" style="width:250px;display:flex;margin-top:15px;" target="_blank;">Fund this project! (Rinkeby Network)</button>
+        </div>
+
+
+    </div>
+    <script>
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        }
+        else {
+            web3 = new Web3(new Web3.providers.HttpProvider(web3.currentProvider));
+        }
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+        var bankContract = web3.eth.contract([
             {
                 "constant": false,
                 "inputs": [],
@@ -85,34 +98,62 @@
                 "type": "function"
             }
         ]);
-            var bank = bankContract.at("0xe82B2adC302769f53C32a847250DC4869C83B653");
-            // var depositEvent = bank.DepositEvent();
-            bank.getBalance(function(error, result){
-                if(!error){
-                    $("#balance").html(result.toString());
-                }
-                else{
-                    console.log(error);
-                }
-            });
-            bank.owner(function(error, result){
-                if(!error){
-                    $("#owner").html(result);
-                }
-                else{
-                    console.log(error);
-                }
-            });
-            // depositEvent.watch(function(error, result){
-            //     if(!error){
-            //         $("#balance").html(result.args.balance.toString());
-            //     }
-            //     else{
-            //         console.log(error);
-            //     }
-            // });
-        </script>
-    </body>
-    </html>
+        var bank = bankContract.at("0xe82B2adC302769f53C32a847250DC4869C83B653");
+        // var depositEvent = bank.DepositEvent();
+        bank.getBalance(function (error, result) {
+            if (!error) {
+                $("#balance").html(result.toString());
+            }
+            else {
+                console.log(error);
+            }
+        });
+        bank.owner(function (error, result) {
+            if (!error) {
+                $("#owner").html(result);
+            }
+            else {
+                console.log(error);
+            }
+        });
+        // depositEvent.watch(function(error, result){
+        //     if(!error){
+        //         $("#balance").html(result.args.balance.toString());
+        //     }
+        //     else{
+        //         console.log(error);
+        //     }
+        // });
 
-    
+        function sendDonation() {
+            console.log("Donation is on the way!")
+            var donationContractAddress = "0xc44c04DF5Bd67c8353944d56aF09484180953002";
+            var payee = "0x4595197A4e3E9E9dfdD3a3fC3A3fFA9de7cb01d1";
+            var userAccount = web3.eth.accounts[0];
+            var Amount = document.getElementById('amount').value;
+            console.log(Amount)
+            var B = web3.toWei(Amount, "ether")
+            var DonationContract = web3.eth.contract(donationContractABI);
+            var donationContract = DonationContract.at(donationContractAddress);
+            donationContract.deposit(payee, { gas: 200000, value: B }, console.log)
+                // donationContract.deposit(payee, { gas: 200000, value: Amount }, console.log)
+                .on("receipt", function (receipt) {
+                    $("#txStatus").text("Thank you for your donation! ");
+                })
+                .on("error", function (error) {
+                    // Do something to alert the user their transaction has failed
+                    $("#txStatus").text(error);
+                });
+            var accountInterval = setInterval(function () {
+                // Check if account has changed
+                if (web3.eth.accounts[0] !== userAccount) {
+                    userAccount = web3.eth.accounts[0];
+                    // Call a function to update the UI with the new account
+                    // getDonationsByOwner(userAccount)
+                    //     .then(displayDonations);
+                }
+            }, 10000);
+    </script>
+</body>
+
+</html>
