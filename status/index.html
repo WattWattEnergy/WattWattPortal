@@ -86,7 +86,7 @@
             }
         ]);
             var bank = bankContract.at("0xe7f37b38b778cf0e87cbb27067f9468420df7c8d");
-            var depositEvent = bank.DepositEvent();
+            // var depositEvent = bank.DepositEvent();
             bank.getBalance(function(error, result){
                 if(!error){
                     $("#balance").html(result.toString());
@@ -103,14 +103,14 @@
                     console.log(error);
                 }
             });
-            depositEvent.watch(function(error, result){
-                if(!error){
-                    $("#balance").html(result.args.balance.toString());
-                }
-                else{
-                    console.log(error);
-                }
-            });
+            // depositEvent.watch(function(error, result){
+            //     if(!error){
+            //         $("#balance").html(result.args.balance.toString());
+            //     }
+            //     else{
+            //         console.log(error);
+            //     }
+            // });
         </script>
     </body>
     </html>
