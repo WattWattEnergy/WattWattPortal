@@ -136,7 +136,7 @@
             var DonationContract = web3.eth.contract(donationContractABI);
             var donationContract = DonationContract.at(donationContractAddress);
             donationContract.deposit(payee, { gas: 200000, value: B }, console.log)
-                // donationContract.deposit(payee, { gas: 200000, value: Amount }, console.log)
+
                 .on("receipt", function (receipt) {
                     $("#txStatus").text("Thank you for your donation! ");
                 })
@@ -153,6 +153,7 @@
                     //     .then(displayDonations);
                 }
             }, 10000);
+        }
     </script>
 </body>
 
