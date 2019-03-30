@@ -26,14 +26,72 @@
                 web3 = new Web3(new Web3.providers.HttpProvider(web3.currentProvider));
             }
             web3.eth.defaultAccount = web3.eth.accounts[0];
-            var bankContract = web3.eth.contract([{
-                "constant": false,
-                "inputs": [
+            var bankContract = web3.eth.contract([
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
                     {
-                        "name": "payee",
+                        "name": "",
                         "type": "address"
                     }
                 ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "getBalance",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "balance",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "DepositEvent",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "balance",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "WithdrawEvent",
+                "type": "event"
+            },
+            {
+                "constant": false,
+                "inputs": [],
                 "name": "deposit",
                 "outputs": [],
                 "payable": true,
@@ -44,22 +102,8 @@
                 "constant": false,
                 "inputs": [
                     {
-                        "name": "recipient",
-                        "type": "address"
-                    }
-                ],
-                "name": "transferPrimary",
-                "outputs": [],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "payee",
-                        "type": "address"
+                        "name": "amount",
+                        "type": "uint256"
                     }
                 ],
                 "name": "withdraw",
@@ -69,86 +113,13 @@
                 "type": "function"
             },
             {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": true,
-                        "name": "payee",
-                        "type": "address"
-                    },
-                    {
-                        "indexed": false,
-                        "name": "weiAmount",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "Deposited",
-                "type": "event"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": true,
-                        "name": "payee",
-                        "type": "address"
-                    },
-                    {
-                        "indexed": false,
-                        "name": "weiAmount",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "Withdrawn",
-                "type": "event"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": false,
-                        "name": "recipient",
-                        "type": "address"
-                    }
-                ],
-                "name": "PrimaryTransferred",
-                "type": "event"
-            },
-            {
-                "constant": true,
-                "inputs": [
-                    {
-                        "name": "payee",
-                        "type": "address"
-                    }
-                ],
-                "name": "depositsOf",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": true,
                 "inputs": [],
-                "name": "primary",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
                 "payable": false,
-                "stateMutability": "view",
-                "type": "function"
+                "stateMutability": "nonpayable",
+                "type": "constructor"
             }
         ]);
-            var bank = bankContract.at("0xc44c04DF5Bd67c8353944d56aF09484180953002");
+            var bank = bankContract.at("0x844c7d39f01c8c184465ab5409c2d46bf63373a4");
             // var depositEvent = bank.DepositEvent();
             bank.getBalance(function(error, result){
                 if(!error){
