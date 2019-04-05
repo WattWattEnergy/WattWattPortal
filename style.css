@@ -13,6 +13,10 @@ body {
     right: 16px;
 }
 
+.card-content {
+    margin-left: 10px;
+}
+
 .form {
     /* position: absolute;
     right: 20px;
